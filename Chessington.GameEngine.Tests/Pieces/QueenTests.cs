@@ -1,4 +1,5 @@
-﻿using Chessington.GameEngine.Pieces;
+﻿using System.Linq;
+using Chessington.GameEngine.Pieces;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -82,7 +83,7 @@ namespace Chessington.GameEngine.Tests.Pieces
         public void Queen_CantMovePastBlockers()
         {
             var board = new Board();
-            var queen = new Rook(Player.White);
+            var queen = new Queen(Player.White);
             var blocker = new Rook(Player.White);
             var blocker2 = new Rook(Player.White);
             board.AddPiece(Square.At(4, 4), queen);
@@ -90,7 +91,7 @@ namespace Chessington.GameEngine.Tests.Pieces
             board.AddPiece(Square.At(5,5), blocker2);
 
 
-            var moves = queen.GetAvailableMoves(board);
+            var moves = queen.GetAvailableMoves(board).ToList();
 
             moves.Should().NotContain(Square.At(4, 5));
             moves.Should().NotContain(Square.At(4, 6));
@@ -103,14 +104,14 @@ namespace Chessington.GameEngine.Tests.Pieces
         {
             //But not beyond
             var board = new Board();
-            var queen = new Rook(Player.White);
+            var queen = new Queen(Player.White);
             var blocker = new Rook(Player.Black);
             var blocker2 = new Rook(Player.Black);
             board.AddPiece(Square.At(4, 4), queen);
             board.AddPiece(Square.At(4,5), blocker);
             board.AddPiece(Square.At(5,5), blocker2);
 
-            var moves = queen.GetAvailableMoves(board);
+            var moves = queen.GetAvailableMoves(board).ToList();
     
             moves.Should().Contain(Square.At(4, 5));
             moves.Should().NotContain(Square.At(4, 6));

@@ -54,11 +54,13 @@ namespace Chessington.GameEngine.Pieces
         {
             var currentSquare = board.FindPiece(this);
             var rookMoves = new List<Square>();
-
+            
+            //iterate across current piece row
             for (var row = 0; row <= 7; row++)
             {
                 if (row == currentSquare.Row)
-                    continue;
+                    continue; // Don't add current piece location to move list
+                
                 var move = new Square(row, currentSquare.Col);
                 
                 if (ThereIsAPieceBetween(board,move))
@@ -66,12 +68,15 @@ namespace Chessington.GameEngine.Pieces
                 if (SquareIsEmpty(board, move) || SquareContainsEnemyPiece(board, move))
                     rookMoves.Add(move);
             }
-
+            
+            //iterate across current piece column
             for (var col = 0; col <= 7; col++)
             {
                 if (col == currentSquare.Col)
-                    continue;
+                    continue; // Don't add current piece location to move list
+                
                 var move = new Square(currentSquare.Row, col);
+                
                 if (ThereIsAPieceBetween(board,move))
                     continue;
                 if (SquareIsEmpty(board, move) || SquareContainsEnemyPiece(board, move))
@@ -79,11 +84,6 @@ namespace Chessington.GameEngine.Pieces
             }
 
             return rookMoves;
-
-            // Can Move forwards and backwards
-            // Can't move diagonally
-            // Can't jump pieces
-            // Captures by moving into
         }
     }
 }
