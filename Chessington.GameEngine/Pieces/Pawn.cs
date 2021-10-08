@@ -29,28 +29,19 @@ namespace Chessington.GameEngine.Pieces
             else
                 direction = -1;
             
-            moves.Add(new Square(currentSquare.Row + (1 * direction), currentSquare.Col));
+            Square moveOneSquare = new Square(currentSquare.Row + (1 * direction), currentSquare.Col);
+            Square moveTwoSquares = new Square(currentSquare.Row + (2 * direction), currentSquare.Col);
 
-            // If first move, can move two squares
-            if (this.MovesTaken == 0)
+            // If square ahead is empty, add to move list
+            if (SquareIsEmpty(board, moveOneSquare))
             {
-                moves.Add(new Square(currentSquare.Row + (2 * direction), currentSquare.Col));
-
+                moves.Add(moveOneSquare);
             }
             
-            // Check if moves list contains pre-existing pieces. If so, remove them.
-            foreach (var move in moves.ToList())
+            // If first move, can move two squares if both squares ahead are empty
+            if (this.MovesTaken == 0 && SquareIsEmpty(board, moveOneSquare) && SquareIsEmpty(board, moveTwoSquares))
             {
-                if (this.MovesTaken == 0)
-                {
-                    //If first move, and move is two ahead
-                    //If first square is blocked
-                    //Remove move
-                }
-                if (!SquareIsEmpty(board, move))
-                {
-                    moves.Remove(move);
-                }
+                moves.Add(moveTwoSquares);
             }
 
             return moves;
