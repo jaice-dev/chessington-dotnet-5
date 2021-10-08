@@ -26,6 +26,7 @@ namespace Chessington.GameEngine.Tests.Pieces
         
         public void BlackBishop_CanMoveDiagonally()
         {
+            //TODO Split into two tests - one for moving one square, one for moving many?
             var board = new Board();
             var bishop = new Bishop(Player.White);
             board.AddPiece(Square.At(7, 2), bishop);
@@ -36,14 +37,37 @@ namespace Chessington.GameEngine.Tests.Pieces
             moves.Should().Contain(Square.At(2, 7));
         }
         
+        [Test]
+        public void WhiteBishop_CannotMoveVerticallyOrHorizontally()
+        {
+            var board = new Board();
+            var bishop = new Bishop(Player.White);
+            board.AddPiece(Square.At(0, 2), bishop);
+
+            var moves = bishop.GetAvailableMoves(board).ToList();
+
+            moves.Should().NotContain(Square.At(1, 2));
+            moves.Should().NotContain(Square.At(0, 3));
+        }
+        
+        [Test]
+        public void BlackBishop_CannotMoveVerticallyOrHorizontally()
+        {
+            var board = new Board();
+            var bishop = new Bishop(Player.White);
+            board.AddPiece(Square.At(7, 5), bishop);
+
+            var moves = bishop.GetAvailableMoves(board).ToList();
+
+            moves.Should().NotContain(Square.At(7, 6));
+            moves.Should().NotContain(Square.At(6, 7));
+        }
+
 
 
     }
-    
-    //No restriction in movement length, must move diagonally
     //Cannot jump over any other piece (friendly or enemy)
     //Captures by occupying place on which an enemy sits
-    //Can't move off edge of board...
     //Test opposite of everything too
     
 }
