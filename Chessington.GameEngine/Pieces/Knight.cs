@@ -27,13 +27,15 @@ namespace Chessington.GameEngine.Pieces
                 int y = currentSquare.Col + Y[i];
                 
                 //if move is valid, add to move list
+                if (x >= 0 && y >= 0 && x <= 7 && y <= 7)
+                {
+                    var move = new Square(x, y);
+                    if(SquareIsEmpty(board, move) || SquareContainsEnemyPiece(board, move))
+                        knightMoves.Add(move);
+                }
             }
-
-
+            
             return knightMoves;
-            // L shaped moves
-            // Can jump over pieces
-            // Capture by landing on piece
         }
     }
 }
