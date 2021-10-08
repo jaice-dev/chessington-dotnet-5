@@ -10,7 +10,15 @@ namespace Chessington.GameEngine.Pieces
 
         public override IEnumerable<Square> GetAvailableMoves(Board board)
         {
-            return Enumerable.Empty<Square>();
+            var currentSquare = board.FindPiece(this);
+            var kingMoves = new List<Square>();
+
+
+            return kingMoves;
+            
+            // one square in any direction (not off the board)
+            //captures by moving onto other square
+            //TODO implement Check and Checkmate / Castling
         }
     }
 }
