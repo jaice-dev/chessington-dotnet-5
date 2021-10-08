@@ -112,6 +112,7 @@ namespace Chessington.GameEngine.Tests.Pieces
         [Test]
         public void BlackBishop_CanTakeEnemyPiece()
         {
+            //But not move past it
             var board = new Board();
             var bishop = new Bishop(Player.Black);
             var rook = new Rook(Player.White);
@@ -124,13 +125,9 @@ namespace Chessington.GameEngine.Tests.Pieces
             moves.Should().NotContain(Square.At(6, 6));
             moves.Should().NotContain(Square.At(7, 7));
         }
-
-
-        //Test Cannot jump friendly piece.
-        //Test Can move to enemy occupied square but not beyond
+        
         
 
     }
-    //Test opposite of everything too
-    
+
 }

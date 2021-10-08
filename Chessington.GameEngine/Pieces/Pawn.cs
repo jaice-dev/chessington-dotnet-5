@@ -8,27 +8,6 @@ namespace Chessington.GameEngine.Pieces
         public Pawn(Player player) 
             : base(player) { }
 
-        public bool SquareIsEmpty(Board board, Square square)
-        {
-            if (board.GetPiece(square) != null)
-            {
-                return false;
-            }
-            return true;
-        }
-
-        public bool SquareContainsEnemyPiece(Board board, Square square)
-        {
-            if (board.GetPiece(square) != null)
-            {
-                if (board.GetPiece(square).Player != this.Player)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
         public override IEnumerable<Square> GetAvailableMoves(Board board)
         {
             //Initialise variables

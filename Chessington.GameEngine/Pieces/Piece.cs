@@ -9,10 +9,25 @@ namespace Chessington.GameEngine.Pieces
             Player = player;
         }
 
-        public Player Player { get; private set; }
+        public bool SquareIsEmpty(Board board, Square square)
+        {
+            if (board.GetPiece(square) != null) 
+                return false;
+            return true;
+        }
+
+        public bool SquareContainsEnemyPiece(Board board, Square square)
+        {
+            if (board.GetPiece(square) != null)
+                if (board.GetPiece(square).Player != Player)
+                    return true;
+            return false;
+        }
 
         public int MovesTaken = 0;
-
+        
+        public Player Player { get; private set; }
+        
         public abstract IEnumerable<Square> GetAvailableMoves(Board board);
 
         public void MoveTo(Board board, Square newSquare)
