@@ -126,8 +126,17 @@ namespace Chessington.GameEngine.Tests.Pieces
             moves.Should().NotContain(Square.At(7, 7));
         }
         
-        
+        [Test]
+        public void Bishop_CantMoveToSelf()
+        {
+            var board = new Board();
+            var bishop = new Bishop(Player.White);
+            board.AddPiece(Square.At(3, 3), bishop);
+            
+            var moves = bishop.GetAvailableMoves(board).ToList();
 
+            moves.Should().NotContain(Square.At(3, 3));
+        }
     }
-
 }
+    
