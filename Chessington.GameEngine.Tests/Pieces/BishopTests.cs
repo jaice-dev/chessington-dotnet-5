@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Chessington.GameEngine.Pieces;
 using FluentAssertions;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using NUnit.Framework;
 
 namespace Chessington.GameEngine.Tests.Pieces
@@ -91,9 +93,41 @@ namespace Chessington.GameEngine.Tests.Pieces
             moves.Should().NotContain(Square.At(7, 6));
             moves.Should().NotContain(Square.At(6, 7));
         }
+        
+        [Test]
+        public void Bishop_CannotJumpFriendlyPiece()
+        {
+            var board = new Board();
+            var bishop = new Bishop(Player.Black);
+            var blockingPiece = new Rook(Player.Black);
+            board.AddPiece(Square.At(3, 3), bishop);
+            board.AddPiece(Square.At(5,5), blockingPiece);
+
+            var moves = bishop.GetAvailableMoves(board).ToList();
+            moves.Should().NotContain(Square.At(5, 5));
+            moves.Should().NotContain(Square.At(6, 6));
+            moves.Should().NotContain(Square.At(7, 7));
+        }
+        
+        [Test]
+        public void BlackBishop_CanTakeEnemyPiece()
+        {
+            var board = new Board();
+            var bishop = new Bishop(Player.Black);
+            var rook = new Rook(Player.White);
+            board.AddPiece(Square.At(3, 3), bishop);
+            board.AddPiece(Square.At(5,5), rook);
+
+            var moves = bishop.GetAvailableMoves(board).ToList();
+
+            moves.Should().Contain(Square.At(5, 5));
+            moves.Should().NotContain(Square.At(6, 6));
+            moves.Should().NotContain(Square.At(7, 7));
+        }
+
 
         //Test Cannot jump friendly piece.
-        //Test Can Capture enemy piece but not move past it.
+        //Test Can move to enemy occupied square but not beyond
         
 
     }
