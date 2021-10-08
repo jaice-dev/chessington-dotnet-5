@@ -48,17 +48,17 @@ namespace Chessington.GameEngine.Pieces
 
 
             //Diagonal Moves
-            if (currentSquare.Col == 0)
+            if (currentSquare.Col == 0) // If at left horizontal edge of board
             {
                 Square moveDiagonal = new Square(currentSquare.Row + (1 * direction), currentSquare.Col + 1);
                 if (SquareContainsEnemyPiece(board, moveDiagonal)) pawnMoves.Add(moveDiagonal);
             }
-            else if (currentSquare.Col == 7)
+            else if (currentSquare.Col == 7) // If at right horiznatal edge of board
             {
                 Square moveDiagonal = new Square(currentSquare.Row + (1 * direction), currentSquare.Col - 1);
                 if (SquareContainsEnemyPiece(board, moveDiagonal)) pawnMoves.Add(moveDiagonal);
             }
-            else
+            else // Move in both directions
             {
                 Square moveFirstDiagonal = new Square(currentSquare.Row + (1 * direction), currentSquare.Col + (1 * direction));
                 Square moveSecondDiagonal = new Square(currentSquare.Row + (1 * direction), currentSquare.Col - (1 * direction));
