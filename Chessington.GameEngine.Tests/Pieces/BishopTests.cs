@@ -28,7 +28,6 @@ namespace Chessington.GameEngine.Tests.Pieces
         
         public void BlackBishop_CanMoveDiagonallyForwards()
         {
-            //TODO Split into two tests - one for moving one square, one for moving many?
             var board = new Board();
             var bishop = new Bishop(Player.Black);
             board.AddPiece(Square.At(7, 2), bishop);
