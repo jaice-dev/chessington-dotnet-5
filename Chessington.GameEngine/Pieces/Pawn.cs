@@ -17,11 +17,24 @@ namespace Chessington.GameEngine.Pieces
             return true;
         }
 
+        public bool SquareContainsEnemyPiece(Board board, Square square)
+        {
+            if (board.GetPiece(square) != null)
+            {
+                if (board.GetPiece(square).Player != this.Player)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public override IEnumerable<Square> GetAvailableMoves(Board board)
         {
+            //Initialise variables
             var currentSquare = board.FindPiece(this);
-            List<Square> moves = new List<Square>();
-            
+            var pawnMoves = new List<Square>();
+
             //Sets which direction pieces move (positive for forward, neg for backwards)
             int direction;
             if (Player == Player.Black)
@@ -29,22 +42,39 @@ namespace Chessington.GameEngine.Pieces
             else
                 direction = -1;
             
-            Square moveOneSquare = new Square(currentSquare.Row + (1 * direction), currentSquare.Col);
-            Square moveTwoSquares = new Square(currentSquare.Row + (2 * direction), currentSquare.Col);
+            //Initialise possible moves
+            Square moveOneSquareForwards = new Square(currentSquare.Row + (1 * direction), currentSquare.Col);
+            Square moveTwoSquaresForwards = new Square(currentSquare.Row + (2 * direction), currentSquare.Col);
+
+
+            //Diagonal Moves
+            if (currentSquare.Col == 0)
+            {
+                Square moveDiagonal = new Square(currentSquare.Row + (1 * direction), currentSquare.Col + 1);
+                if (SquareContainsEnemyPiece(board, moveDiagonal)) pawnMoves.Add(moveDiagonal);
+            }
+            else if (currentSquare.Col == 7)
+            {
+                Square moveDiagonal = new Square(currentSquare.Row + (1 * direction), currentSquare.Col - 1);
+                if (SquareContainsEnemyPiece(board, moveDiagonal)) pawnMoves.Add(moveDiagonal);
+            }
+            else
+            {
+                Square moveFirstDiagonal = new Square(currentSquare.Row + (1 * direction), currentSquare.Col + (1 * direction));
+                Square moveSecondDiagonal = new Square(currentSquare.Row + (1 * direction), currentSquare.Col - (1 * direction));
+                if (SquareContainsEnemyPiece(board, moveFirstDiagonal)) pawnMoves.Add(moveFirstDiagonal);
+                if (SquareContainsEnemyPiece(board, moveSecondDiagonal)) pawnMoves.Add(moveSecondDiagonal);
+
+            }
 
             // If square ahead is empty, add to move list
-            if (SquareIsEmpty(board, moveOneSquare))
-            {
-                moves.Add(moveOneSquare);
-            }
-            
-            // If first move, can move two squares if both squares ahead are empty
-            if (this.MovesTaken == 0 && SquareIsEmpty(board, moveOneSquare) && SquareIsEmpty(board, moveTwoSquares))
-            {
-                moves.Add(moveTwoSquares);
-            }
+            if (SquareIsEmpty(board, moveOneSquareForwards)) pawnMoves.Add(moveOneSquareForwards);
 
-            return moves;
+            // If first move, can move two squares if both squares ahead are empty
+            if (MovesTaken == 0 && SquareIsEmpty(board, moveOneSquareForwards) &&
+                SquareIsEmpty(board, moveTwoSquaresForwards)) pawnMoves.Add(moveTwoSquaresForwards);
+
+            return pawnMoves;
         }
     }
 }
