@@ -13,27 +13,19 @@ namespace Chessington.GameEngine.Pieces
             var currentSquare = board.FindPiece(this);
             List<Square> moves = new List<Square>();
             
-            //TODO refactor into one method?
-            //TODO has piece already moved?
+            //Sets which direction pieces move (positive for forward, neg for backwards)
+            int direction;
+            if (Player == Player.Black)
+                direction = 1;
+            else
+                direction = -1;
+            
+            moves.Add(new Square(currentSquare.Row + (1 * direction), currentSquare.Col));
 
-            if (this.Player == Player.Black)
+            if (this.MovesTaken == 0) // If first move, can move two squares
             {
-                moves.Add(new Square(currentSquare.Row + 1, currentSquare.Col));
+                moves.Add(new Square(currentSquare.Row + (2 * direction), currentSquare.Col));
 
-                if (this.MovesTaken == 0)
-                {
-                    moves.Add(new Square(currentSquare.Row + 2, currentSquare.Col));
-
-                } 
-            }
-            else if (this.Player == Player.White)
-            {
-                moves.Add(new Square(currentSquare.Row - 1, currentSquare.Col));
-
-                if (this.MovesTaken == 0)
-                {
-                    moves.Add(new Square(currentSquare.Row - 2, currentSquare.Col));
-                }
             }
 
             return moves;
