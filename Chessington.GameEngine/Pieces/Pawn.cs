@@ -28,28 +28,53 @@ namespace Chessington.GameEngine.Pieces
 
 
             //Diagonal Moves
-            if (currentSquare.Col == 0) // If at left horizontal edge of board
+            var moves = GetListOfDiagonalMoves(currentSquare, direction);
+            foreach (var move in moves)
             {
-                var moveRightDiagonal = getMove(currentSquare, direction, 1, 1);
-                TakeEnemyPiece(board, moveRightDiagonal, pawnMoves);
-            }
-            else if (currentSquare.Col == 7) // If at right horiznatal edge of board
-            {
-                var moveLeftDiagonal = getMove(currentSquare, direction, 1, -1);
-                TakeEnemyPiece(board, moveLeftDiagonal, pawnMoves);
-            }
-            else // Move in both directions
-            {
-                var moveRightDiagonal = getMove(currentSquare, direction, 1, 1);
-                TakeEnemyPiece(board, moveRightDiagonal, pawnMoves);
-                var moveLeftDiagonal = getMove(currentSquare, direction, 1, -1);
-                TakeEnemyPiece(board, moveLeftDiagonal, pawnMoves);
-
+                TakeEnemyPiece(board, move, pawnMoves);
             }
             
+            // En Passant
+            // Special pawn capture
+            // Only occurs immediately after a pawn makes a move of two squares on first move, and it could
+            // have been captured by an enemy had it only advanced one square
+            // Opponent captures the just moved pawn "as it passes" through the first square.
+            // The result is the same as if the pawn had advanced only one square and the enemy pawn had captured it normally.
+            
+            /*
+             * There are a few requirements for the move to be legal:
+                The capturing pawn must have advanced exactly three ranks to perform this move.
+                The captured pawn must have moved two squares in one move, landing right next to the capturing pawn.
+                The en passant capture must be performed on the turn immediately after the pawn being captured moves. 
+                If the player does not capture en passant on that turn, they no longer can do it later.
+             */
+            
+            //En Passant
+            //check neighbor squares
+            var leftNeighbour = getMove(currentSquare, direction, 0, -1);
             
 
             return pawnMoves;
+        }
+
+        private IEnumerable<Square> GetListOfDiagonalMoves(Square currentSquare, int direction)
+        {
+            List<Square> listOfMoves = new List<Square>();
+            if (currentSquare.Col == 0) // If at left horizontal edge of board
+            {
+                listOfMoves.Add(getMove(currentSquare, direction, 1, 1));
+            }
+            else if (currentSquare.Col == 7) // If at right horiznatal edge of board
+            {
+                listOfMoves.Add(getMove(currentSquare, direction, 1, -1));
+            }
+            else // Move in both directions
+            {
+                listOfMoves.Add(getMove(currentSquare, direction, 1, 1));
+                listOfMoves.Add(getMove(currentSquare, direction, 1, -1));
+            }
+
+            return listOfMoves;
         }
 
         private void TakeEnemyPiece(Board board, Square move, List<Square> pawnMoves)
