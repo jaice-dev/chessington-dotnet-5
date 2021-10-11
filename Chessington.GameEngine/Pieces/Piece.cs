@@ -27,6 +27,11 @@ namespace Chessington.GameEngine.Pieces
         public int MovesTaken = 0;
         
         public Player Player { get; private set; }
+
+        public string GetName()
+        {
+            return this.GetType().Name;
+        }
         
         public abstract IEnumerable<Square> GetAvailableMoves(Board board);
 

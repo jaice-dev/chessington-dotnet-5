@@ -24,8 +24,26 @@ namespace Chessington.GameEngine.Tests
         {
             var capturedPieces = new List<Piece>()
             {
-                new Rook(Player.Black),
-                new Queen(Player.White),
+                new Pawn(Player.Black),
+                new Pawn(Player.White),
+                new Queen(Player.Black)
+            };
+            
+            var board = A.Fake<IBoard>();
+            A.CallTo(() => board.CapturedPieces).Returns(capturedPieces);
+
+            var scoreCalculator = new ScoreCalculator(board);
+
+            scoreCalculator.GetWhiteScore().Should().Be(10);
+        }
+        
+        [Test]
+        public void BlackScoreTest()
+        {
+            var capturedPieces = new List<Piece>()
+            {
+                new Rook(Player.White),
+                new Bishop(Player.White),
                 new Pawn(Player.Black)
             };
             
@@ -34,7 +52,7 @@ namespace Chessington.GameEngine.Tests
 
             var scoreCalculator = new ScoreCalculator(board);
 
-            scoreCalculator.GetWhiteScore().Should().Be(6);
+            scoreCalculator.GetBlackScore().Should().Be(8);
         }
     }
 }

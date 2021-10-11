@@ -24,13 +24,30 @@ namespace Chessington.GameEngine
 
         public int GetWhiteScore()
         {
-            return 0;
+            var score = 0;
+            foreach (var piece in _board.CapturedPieces)
+            {
+                if (piece.Player == Player.Black)
+                {
+                    score += scoresDict[piece.GetName()];
+                }
+            }
+
+            return score;
         }
 
         public int GetBlackScore()
         {
-            // Should add up the value of all of the pieces that black has taken.
-            return 0;
+            var score = 0;
+            foreach (var piece in _board.CapturedPieces)
+            {
+                if (piece.Player == Player.White)
+                {
+                    score += scoresDict[piece.GetName()];
+                }
+            }
+
+            return score;
         }
     }
 }
