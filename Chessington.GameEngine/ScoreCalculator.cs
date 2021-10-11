@@ -7,7 +7,7 @@ namespace Chessington.GameEngine
     {
         private Board _board;
 
-        private Dictionary<string, int> scoreesDict = new Dictionary<string, int>()
+        private Dictionary<string, int> scoresDict = new Dictionary<string, int>()
         {
             {"Pawn", 1},
             {"Bishop", 3},
