@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Input;
+using Chessington.GameEngine.Pieces;
 
 namespace Chessington.GameEngine
 {
     public class ScoreCalculator
     {
-        private Board _board;
+        private IBoard _board;
 
         private Dictionary<string, int> scoresDict = new Dictionary<string, int>()
         {
@@ -16,14 +17,13 @@ namespace Chessington.GameEngine
             {"Queen", 9}
         };
 
-        public ScoreCalculator(Board board)
+        public ScoreCalculator(IBoard board)
         {
             _board = board;
         }
 
         public int GetWhiteScore()
         {
-            // Should add up the value of all of the pieces that white has taken.
             return 0;
         }
 
