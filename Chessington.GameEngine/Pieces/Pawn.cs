@@ -13,19 +13,11 @@ namespace Chessington.GameEngine.Pieces
             //Initialise variables
             var currentSquare = board.FindPiece(this);
             var pawnMoves = new List<Square>();
-
-            //Sets which direction pieces move (positive for forward, neg for backwards)
+            var enPassantable = false;
+            
             var direction = GetDirection();
 
-            // If square ahead is empty, add to move list
-            var moveOneSquareForwards = getMove(currentSquare, direction, 1);
-            if (SquareIsEmpty(board, moveOneSquareForwards)) pawnMoves.Add(moveOneSquareForwards);
-            
-            // If first move, can move two squares if both squares ahead are empty
-            var moveTwoSquaresForwards = getMove(currentSquare, direction, 2);
-            if (MovesTaken == 0 && SquareIsEmpty(board, moveOneSquareForwards) &&
-                SquareIsEmpty(board, moveTwoSquaresForwards)) pawnMoves.Add(moveTwoSquaresForwards);
-
+            AddForwardMovesToPawnMoves(board, currentSquare, direction, pawnMoves);
 
             //Diagonal Moves
             var moves = GetListOfDiagonalMoves(currentSquare, direction);
@@ -57,6 +49,38 @@ namespace Chessington.GameEngine.Pieces
             return pawnMoves;
         }
 
+        private void AddForwardMovesToPawnMoves(Board board, Square currentSquare, int direction, List<Square> pawnMoves)
+        {
+            var moveOneSquareForwards = getMove(currentSquare, direction, 1);
+            if (SquareIsEmpty(board, moveOneSquareForwards))
+            {
+                pawnMoves.Add(moveOneSquareForwards);
+                var moveTwoSquaresForwards = getMove(currentSquare, direction, 2);
+                if (MovesTaken == 0 && SquareIsEmpty(board, moveTwoSquaresForwards))
+                    pawnMoves.Add(moveTwoSquaresForwards);
+            }
+        }
+
+        private Square getMove(Square currentSquare, int direction, int rowDiff, int colDirection=0)
+        {
+            return new (currentSquare.Row + (rowDiff * direction), currentSquare.Col + colDirection);
+        }
+        
+        private int GetDirection()
+        {
+            int direction;
+            if (Player == Player.Black)
+                direction = 1;
+            else
+                direction = -1;
+            return direction;
+        }
+        
+        private void TakeEnemyPiece(Board board, Square move, List<Square> pawnMoves)
+        {
+            if (SquareContainsEnemyPiece(board, move)) pawnMoves.Add(move);
+        }
+        
         private IEnumerable<Square> GetListOfDiagonalMoves(Square currentSquare, int direction)
         {
             List<Square> listOfMoves = new List<Square>();
@@ -75,26 +99,6 @@ namespace Chessington.GameEngine.Pieces
             }
 
             return listOfMoves;
-        }
-
-        private void TakeEnemyPiece(Board board, Square move, List<Square> pawnMoves)
-        {
-            if (SquareContainsEnemyPiece(board, move)) pawnMoves.Add(move);
-        }
-
-        private int GetDirection()
-        {
-            int direction;
-            if (Player == Player.Black)
-                direction = 1;
-            else
-                direction = -1;
-            return direction;
-        }
-
-        private Square getMove(Square currentSquare, int direction, int rowDiff, int colDirection=0)
-        {
-            return new (currentSquare.Row + (rowDiff * direction), currentSquare.Col + colDirection);
         }
     }
 }
