@@ -15,45 +15,61 @@ namespace Chessington.GameEngine.Pieces
             var pawnMoves = new List<Square>();
 
             //Sets which direction pieces move (positive for forward, neg for backwards)
-            int direction;
-            if (Player == Player.Black)
-                direction = 1;
-            else
-                direction = -1;
+            var direction = GetDirection();
+
+            // If square ahead is empty, add to move list
+            var moveOneSquareForwards = getMove(currentSquare, direction, 1);
+            if (SquareIsEmpty(board, moveOneSquareForwards)) pawnMoves.Add(moveOneSquareForwards);
             
-            //Initialise possible moves
-            Square moveOneSquareForwards = new Square(currentSquare.Row + (1 * direction), currentSquare.Col);
-            Square moveTwoSquaresForwards = new Square(currentSquare.Row + (2 * direction), currentSquare.Col);
+            // If first move, can move two squares if both squares ahead are empty
+            var moveTwoSquaresForwards = getMove(currentSquare, direction, 2);
+            if (MovesTaken == 0 && SquareIsEmpty(board, moveOneSquareForwards) &&
+                SquareIsEmpty(board, moveTwoSquaresForwards)) pawnMoves.Add(moveTwoSquaresForwards);
 
 
             //Diagonal Moves
             if (currentSquare.Col == 0) // If at left horizontal edge of board
             {
-                Square moveDiagonal = new Square(currentSquare.Row + (1 * direction), currentSquare.Col + 1);
-                if (SquareContainsEnemyPiece(board, moveDiagonal)) pawnMoves.Add(moveDiagonal);
+                var moveRightDiagonal = getMove(currentSquare, direction, 1, 1);
+                TakeEnemyPiece(board, moveRightDiagonal, pawnMoves);
             }
             else if (currentSquare.Col == 7) // If at right horiznatal edge of board
             {
-                Square moveDiagonal = new Square(currentSquare.Row + (1 * direction), currentSquare.Col - 1);
-                if (SquareContainsEnemyPiece(board, moveDiagonal)) pawnMoves.Add(moveDiagonal);
+                var moveLeftDiagonal = getMove(currentSquare, direction, 1, -1);
+                TakeEnemyPiece(board, moveLeftDiagonal, pawnMoves);
             }
             else // Move in both directions
             {
-                Square moveFirstDiagonal = new Square(currentSquare.Row + (1 * direction), currentSquare.Col + (1 * direction));
-                Square moveSecondDiagonal = new Square(currentSquare.Row + (1 * direction), currentSquare.Col - (1 * direction));
-                if (SquareContainsEnemyPiece(board, moveFirstDiagonal)) pawnMoves.Add(moveFirstDiagonal);
-                if (SquareContainsEnemyPiece(board, moveSecondDiagonal)) pawnMoves.Add(moveSecondDiagonal);
+                var moveRightDiagonal = getMove(currentSquare, direction, 1, 1);
+                TakeEnemyPiece(board, moveRightDiagonal, pawnMoves);
+                var moveLeftDiagonal = getMove(currentSquare, direction, 1, -1);
+                TakeEnemyPiece(board, moveLeftDiagonal, pawnMoves);
 
             }
-
-            // If square ahead is empty, add to move list
-            if (SquareIsEmpty(board, moveOneSquareForwards)) pawnMoves.Add(moveOneSquareForwards);
-
-            // If first move, can move two squares if both squares ahead are empty
-            if (MovesTaken == 0 && SquareIsEmpty(board, moveOneSquareForwards) &&
-                SquareIsEmpty(board, moveTwoSquaresForwards)) pawnMoves.Add(moveTwoSquaresForwards);
+            
+            
 
             return pawnMoves;
+        }
+
+        private void TakeEnemyPiece(Board board, Square move, List<Square> pawnMoves)
+        {
+            if (SquareContainsEnemyPiece(board, move)) pawnMoves.Add(move);
+        }
+
+        private int GetDirection()
+        {
+            int direction;
+            if (Player == Player.Black)
+                direction = 1;
+            else
+                direction = -1;
+            return direction;
+        }
+
+        private Square getMove(Square currentSquare, int direction, int rowDiff, int colDirection=0)
+        {
+            return new (currentSquare.Row + (rowDiff * direction), currentSquare.Col + colDirection);
         }
     }
 }

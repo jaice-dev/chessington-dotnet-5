@@ -46,7 +46,8 @@ namespace Chessington.GameEngine.Tests
                 new Bishop(Player.White),
                 new Pawn(Player.Black)
             };
-            
+
+
             var board = A.Fake<IBoard>();
             A.CallTo(() => board.CapturedPieces).Returns(capturedPieces);
 
