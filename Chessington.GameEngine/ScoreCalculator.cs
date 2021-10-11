@@ -1,8 +1,20 @@
-﻿namespace Chessington.GameEngine
+﻿using System.Collections.Generic;
+using System.Windows.Input;
+
+namespace Chessington.GameEngine
 {
     public class ScoreCalculator
     {
         private Board _board;
+
+        private Dictionary<string, int> scoreesDict = new Dictionary<string, int>()
+        {
+            {"Pawn", 1},
+            {"Bishop", 3},
+            {"Knight", 3},
+            {"Rook", 5},
+            {"Queen", 9}
+        };
 
         public ScoreCalculator(Board board)
         {
